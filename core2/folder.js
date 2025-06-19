@@ -356,6 +356,7 @@ module.exports = (function () {
       path_to_source_folder,
       path_to_destination_type,
       new_meta,
+      is_copy_or_move = "copy",
     }) => {
       dev.logfunction({ path_to_source_folder, path_to_destination_type });
 
@@ -368,7 +369,10 @@ module.exports = (function () {
 
       const source_folder_slug = utils.getSlugFromPath(path_to_source_folder);
 
-      let folder_slug = source_folder_slug + "-copy";
+      let folder_slug =
+        is_copy_or_move === "copy"
+          ? source_folder_slug + "-copy"
+          : source_folder_slug;
       folder_slug = await _preventFolderOverride({
         path_to_type: path_to_destination_type,
         folder_slug,
@@ -389,7 +393,6 @@ module.exports = (function () {
         path_to_destination_folder,
       });
 
-      // todo update with meta
       await API.updateFolder({
         path_to_type,
         path_to_folder: path_to_destination_folder,
@@ -488,6 +491,7 @@ module.exports = (function () {
         path_to_source_folder: path_to_folder_in_bin,
         path_to_destination_type: path_to_type,
         new_meta: {},
+        is_copy_or_move: "move",
       });
 
       await _removeFolderForGood({ path_to_folder: path_to_folder_in_bin });

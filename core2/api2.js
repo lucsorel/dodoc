@@ -1043,7 +1043,7 @@ module.exports = (function () {
     dev.logapi({ path_to_type, path_to_folder, data });
 
     try {
-      let { path_to_destination_type, new_meta } = data;
+      let { path_to_destination_type, new_meta, is_copy_or_move } = data;
       if (!path_to_destination_type) path_to_destination_type = path_to_type;
       else if (path_to_destination_type !== path_to_type) {
         // todo check for auth to copy folder
@@ -1070,6 +1070,7 @@ module.exports = (function () {
         path_to_source_folder,
         path_to_destination_type,
         new_meta,
+        is_copy_or_move,
       });
       dev.logpackets({
         status: `copied folder`,
