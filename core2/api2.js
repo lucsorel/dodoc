@@ -61,7 +61,7 @@ module.exports = (function () {
       ],
       _generalPasswordCheck,
       _restrictToLocalAdmins,
-      _getBin
+      _getFolderBin
     );
     app.post(
       [
@@ -93,6 +93,16 @@ module.exports = (function () {
       ],
       _generalPasswordCheck,
       _getFile
+    );
+    app.get(
+      [
+        "/_api2/:folder_type/:folder_slug/_bin",
+        "/_api2/:folder_type/:folder_slug/:sub_folder_type/:sub_folder_slug/_bin",
+        "/_api2/:folder_type/:folder_slug/:sub_folder_type/:sub_folder_slug/:subsub_folder_type/:subsub_folder_slug/_bin",
+      ],
+      _generalPasswordCheck,
+      _restrictToLocalAdmins,
+      _getFilesBin
     );
     app.post(
       [
@@ -1135,11 +1145,11 @@ module.exports = (function () {
 
   /************************************************************************************ BIN ***********/
 
-  async function _getBin(req, res, next) {
+  async function _getFolderBin(req, res, next) {
     const { path_to_type } = utils.makePathFromReq(req);
 
     try {
-      const bin_content = await folder.getBinContent({
+      const bin_content = await folder.getFolderBinContent({
         path_to_type,
       });
       res.json(bin_content);
@@ -1152,6 +1162,7 @@ module.exports = (function () {
       });
     }
   }
+
   async function _restoreFromBin(req, res, next) {
     const { path_to_type, path_to_folder_in_bin } = utils.makePathFromReq(req);
     dev.logapi({ path_to_type, path_to_folder_in_bin });
@@ -1193,6 +1204,24 @@ module.exports = (function () {
     } catch (err) {
       const { message, code, err_infos } = err;
       dev.error("Failed to remove bin folder: " + message);
+      res.status(500).send({
+        code,
+        err_infos,
+      });
+    }
+  }
+
+  async function _getFilesBin(req, res, next) {
+    const { path_to_folder } = utils.makePathFromReq(req);
+
+    try {
+      const bin_content = await file.getFilesBin({
+        path_to_folder,
+      });
+      res.json(bin_content);
+    } catch (err) {
+      const { message, code, err_infos } = err;
+      dev.error("Failed to get bin folder: " + message);
       res.status(500).send({
         code,
         err_infos,

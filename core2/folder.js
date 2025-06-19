@@ -462,7 +462,7 @@ module.exports = (function () {
       return;
     },
 
-    getBinContent: async ({ path_to_type }) => {
+    getFolderBinContent: async ({ path_to_type }) => {
       dev.logfunction({ path_to_type });
 
       // get _bin folder size

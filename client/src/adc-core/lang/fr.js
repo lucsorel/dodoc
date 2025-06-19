@@ -1405,4 +1405,5 @@ export default {
     "Recherche des coordonnées GPS de votre appareil...",
   gps_coordinates_found: "Coordonnées GPS trouvées.",
   column_count: "Nombre de colonnes",
+  restore_publications: "Restaurer des publications supprimées",
 };

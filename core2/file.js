@@ -276,6 +276,25 @@ module.exports = (function () {
 
       return changed_data;
     },
+
+    getFilesBin: async ({ path_to_folder }) => {
+      dev.logfunction({ path_to_folder });
+
+      const bin_folder_path = path.join(
+        path_to_folder,
+        global.settings.deletedFolderName
+      );
+
+      const bin_files = await API.getFiles({
+        path_to_folder: bin_folder_path,
+      });
+
+      return {
+        size: bin_size,
+        files: bin_files,
+      };
+    },
+
     _regenerateThumbs: async ({
       path_to_folder,
       path_to_meta,
