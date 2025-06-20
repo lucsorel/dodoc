@@ -324,10 +324,21 @@
           </button>
           <BinFolder
             v-if="show_bin_modal"
-            :modal_title="$t('restore_spaces')"
-            :path="'spaces'"
+            :modal_title="$t('restore_medias')"
+            :path="project.$path"
             @close="show_bin_modal = false"
-          />
+          >
+            <template v-slot="slotProps">
+              <MediaTile
+                :file="slotProps.project"
+                :index="0"
+                :project_path="project.$path"
+                :tile_mode="tile_mode"
+                :is_selectable="false"
+                :is_selected="false"
+              />
+            </template>
+          </BinFolder>
         </div>
       </transition>
 

@@ -293,7 +293,7 @@ module.exports = (function () {
 
       return {
         size: bin_size,
-        files: bin_files,
+        items: bin_files,
       };
     },
 

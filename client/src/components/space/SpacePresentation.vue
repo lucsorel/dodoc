@@ -58,7 +58,16 @@
             :modal_title="$t('restore_projects')"
             :path="space.$path + '/projects'"
             @close="show_bin_modal = false"
-          />
+          >
+            <template v-slot="slotProps">
+              <ProjectPresentation
+                :project="slotProps.project"
+                :context="slotProps.context"
+                :display_original_space="slotProps.display_original_space"
+                :can_edit="slotProps.can_edit"
+              />
+            </template>
+          </BinFolder>
 
           <button
             v-if="$root.app_infos.is_electron && is_instance_admin"
@@ -138,6 +147,7 @@
 </template>
 <script>
 import BinFolder from "@/adc-core/fields/BinFolder.vue";
+import ProjectPresentation from "@/components/ProjectPresentation.vue";
 
 export default {
   props: {
@@ -148,6 +158,7 @@ export default {
   },
   components: {
     BinFolder,
+    ProjectPresentation,
   },
   data() {
     return {

@@ -78,7 +78,15 @@
       :modal_title="$t('restore_spaces')"
       :path="'spaces'"
       @close="show_bin_modal = false"
-    />
+    >
+      <template v-slot="slotProps">
+        <SpacePresentation
+          :space="slotProps.project"
+          :context="slotProps.context"
+          :can_edit="slotProps.can_edit"
+        />
+      </template>
+    </BinFolder>
   </div>
 </template>
 <script>

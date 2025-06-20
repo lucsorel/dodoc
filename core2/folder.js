@@ -482,7 +482,7 @@ module.exports = (function () {
 
       return {
         size: bin_size,
-        folders: bin_folders,
+        items: bin_folders,
       };
     },
     restoreFromBin: async ({ path_to_folder_in_bin, path_to_type }) => {

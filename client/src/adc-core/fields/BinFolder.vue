@@ -5,7 +5,7 @@
         <div class="_loader" v-if="is_loading" key="loader">
           <LoaderSpinner />
         </div>
-        <div v-else-if="bin_folders.length === 0" key="empty">
+        <div v-else-if="bin_items.length === 0" key="empty">
           <p class="u-instructions">{{ $t("bin_is_empty") }}</p>
         </div>
         <div v-else key="content">
@@ -13,7 +13,7 @@
             <div class="u-metaField">
               <DLabel :str="$t('items_in_bin')" />
               <div>
-                {{ bin_folders.length }}
+                {{ bin_items.length }}
               </div>
             </div>
             <SizeDisplay
@@ -26,12 +26,21 @@
           <!-- <hr /> -->
           <div class="_items">
             <BinFolderItem
-              v-for="bin_folder in bin_folders"
-              :key="bin_folder.$path"
-              :folder="bin_folder"
+              v-for="bin_item in bin_items"
+              :key="bin_item.$path"
+              :item="bin_item"
               @restoredSuccessfully="getBinContent"
               @removedSuccessfully="getBinContent"
-            />
+            >
+              <template v-slot="slotProps">
+                <slot
+                  :project="slotProps.project"
+                  :context="slotProps.context"
+                  :display_original_space="slotProps.display_original_space"
+                  :can_edit="slotProps.can_edit"
+                />
+              </template>
+            </BinFolderItem>
           </div>
         </div>
       </transition>
@@ -54,7 +63,7 @@ export default {
     return {
       is_loading: false,
       bin_folder_size: undefined,
-      bin_folders: [],
+      bin_items: [],
     };
   },
   async created() {
@@ -74,7 +83,7 @@ export default {
         });
 
       this.bin_folder_size = bin_content.size;
-      this.bin_folders = bin_content.folders;
+      this.bin_items = bin_content.items;
     },
     // async emptyBin(path) {
     //   await this.$api.emptyBin({ path });
