@@ -36,7 +36,7 @@
         <button
           type="button"
           class="u-button u-button u-button_bleuvert"
-          @click="restoreFolder"
+          @click="restoreItem"
         >
           {{ $t("restore") }}
         </button>
@@ -65,7 +65,7 @@ export default {
     };
   },
   methods: {
-    async restoreFolder() {
+    async restoreItem() {
       this.is_loading = true;
       await this.$api.restoreFromBin({ path: this.item.$path });
       this.$emit("restoredSuccessfully");
