@@ -56,8 +56,7 @@
           <BinFolder
             v-if="show_bin_modal"
             :modal_title="$t('restore_projects')"
-            :path="space.$path"
-            :subfolders_type="'projects'"
+            :path="space.$path + '/projects'"
             @close="show_bin_modal = false"
           />
 

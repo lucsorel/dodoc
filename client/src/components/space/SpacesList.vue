@@ -76,8 +76,7 @@
     <BinFolder
       v-if="show_bin_modal"
       :modal_title="$t('restore_spaces')"
-      :path="'.'"
-      :subfolders_type="'spaces'"
+      :path="'spaces'"
       @close="show_bin_modal = false"
     />
   </div>

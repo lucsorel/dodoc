@@ -24,11 +24,10 @@
           </div>
 
           <!-- <hr /> -->
-
           <div class="_items">
             <BinFolderItem
               v-for="bin_folder in bin_folders"
-              :key="bin_folder.slug"
+              :key="bin_folder.$path"
               :folder="bin_folder"
               @restoredSuccessfully="getBinContent"
               @removedSuccessfully="getBinContent"
@@ -47,7 +46,6 @@ export default {
     button_text: String,
     modal_title: String,
     path: String,
-    subfolders_type: String,
   },
   components: {
     BinFolderItem,
@@ -69,7 +67,7 @@ export default {
     async getBinContent() {
       const bin_content = await this.$api
         .getBin({
-          path: `${this.path}/${this.subfolders_type}`,
+          path: this.path,
         })
         .catch((err) => {
           console.error(err);

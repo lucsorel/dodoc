@@ -80,8 +80,7 @@
         <BinFolder
           v-if="show_bin_modal"
           :modal_title="$t('restore_publications')"
-          :path="project.$path"
-          :subfolders_type="'publications'"
+          :path="project.$path + '/publications'"
           @close="show_bin_modal = false"
         />
       </template>
