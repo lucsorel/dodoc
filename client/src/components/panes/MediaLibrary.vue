@@ -313,15 +313,16 @@
             </transition-group>
           </div>
 
-          <button
-            type="button"
-            class="u-buttonLink"
-            v-if="can_edit"
-            @click="show_bin_modal = true"
-          >
-            <b-icon icon="recycle" />
-            {{ $t("bin") }}
-          </button>
+          <div class="_binButton" v-if="can_edit_project">
+            <button
+              type="button"
+              class="u-buttonLink"
+              @click="show_bin_modal = true"
+            >
+              <b-icon icon="recycle" />
+              {{ $t("bin") }}
+            </button>
+          </div>
           <BinFolder
             v-if="show_bin_modal"
             :modal_title="$t('restore_medias')"
@@ -437,7 +438,7 @@ export default {
     hide_already_present_medias: Boolean,
     meta_filenames_already_present: [Boolean, Array],
     show_only_media_of_types: [String, Array],
-    can_edit: Boolean,
+    can_edit_project: Boolean,
   },
   components: {
     ImportFileZone,
@@ -1172,5 +1173,8 @@ export default {
   text-align: center;
   font-weight: bold;
   text-transform: lowercase;
+}
+._binButton {
+  margin: calc(var(--spacing) / 2);
 }
 </style>

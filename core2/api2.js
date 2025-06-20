@@ -71,7 +71,7 @@ module.exports = (function () {
       ],
       _generalPasswordCheck,
       _restrictToLocalAdmins,
-      _restoreFromBin
+      _restoreFolderFromBin
     );
     app.delete(
       [
@@ -103,6 +103,26 @@ module.exports = (function () {
       _generalPasswordCheck,
       _restrictToLocalAdmins,
       _getFilesBin
+    );
+    app.post(
+      [
+        "/_api2/:folder_type/:folder_slug/_bin/:meta_filename/_restore",
+        "/_api2/:folder_type/:folder_slug/:sub_folder_type/:sub_folder_slug/_bin/:meta_filename/_restore",
+        "/_api2/:folder_type/:folder_slug/:sub_folder_type/:sub_folder_slug/:subsub_folder_type/:subsub_folder_slug/_bin/:meta_filename/_restore",
+      ],
+      _generalPasswordCheck,
+      _restrictToLocalAdmins,
+      _restoreFileFromBin
+    );
+    app.delete(
+      [
+        "/_api2/:folder_type/:folder_slug/_bin/:meta_filename",
+        "/_api2/:folder_type/:folder_slug/:sub_folder_type/:sub_folder_slug/_bin/:meta_filename",
+        "/_api2/:folder_type/:folder_slug/:sub_folder_type/:sub_folder_slug/:subsub_folder_type/:subsub_folder_slug/_bin/:meta_filename",
+      ],
+      _generalPasswordCheck,
+      _restrictToLocalAdmins,
+      _removeBinFile
     );
     app.post(
       [
@@ -1164,7 +1184,7 @@ module.exports = (function () {
     }
   }
 
-  async function _restoreFromBin(req, res, next) {
+  async function _restoreFolderFromBin(req, res, next) {
     const { path_to_type, path_to_folder_in_bin } = utils.makePathFromReq(req);
     dev.logapi({ path_to_type, path_to_folder_in_bin });
 
@@ -1223,6 +1243,61 @@ module.exports = (function () {
     } catch (err) {
       const { message, code, err_infos } = err;
       dev.error("Failed to get bin folder: " + message);
+      res.status(500).send({
+        code,
+        err_infos,
+      });
+    }
+  }
+
+  async function _restoreFileFromBin(req, res, next) {
+    const { path_to_folder, meta_filename } = utils.makePathFromReq(req);
+    dev.logapi({ path_to_folder, meta_filename });
+
+    try {
+      const restored_file_path = await file.restoreFileFromBin({
+        path_to_folder,
+        meta_filename,
+      });
+
+      dev.logpackets({
+        status: `restored file from bin`,
+        restored_file_path,
+      });
+      res.status(200).json({ restored_file_path });
+
+      const restored_file_meta = await file.getFile({
+        path_to_meta: path.join(path_to_folder, restored_file_path),
+      });
+
+      notifier.emit("fileCreated", utils.convertToSlashPath(path_to_folder), {
+        path_to_folder: utils.convertToSlashPath(path_to_folder),
+        meta: restored_file_meta,
+      });
+    } catch (err) {
+      const { message, code, err_infos } = err;
+      dev.error("Failed to restore file from bin: " + message);
+      res.status(500).send({
+        code,
+        err_infos,
+      });
+    }
+  }
+
+  async function _removeBinFile(req, res, next) {
+    const { path_to_folder, meta_filename } = utils.makePathFromReq(req);
+    dev.logapi({ path_to_folder, meta_filename });
+
+    try {
+      await file.removeBinFile({
+        path_to_folder,
+        meta_filename,
+      });
+      dev.logpackets({ status: "file was removed from bin" });
+      res.status(200).json({ status: "ok" });
+    } catch (err) {
+      const { message, code, err_infos } = err;
+      dev.error("Failed to remove bin file: " + message);
       res.status(500).send({
         code,
         err_infos,
