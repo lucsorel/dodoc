@@ -60,6 +60,7 @@
           :key="pane.key"
           :project="project"
           :media_focused="pane.focus"
+          :can_edit="can_edit_project"
           @update:media_focused="setItem(pane, 'focus', $event)"
         />
         <MakePane

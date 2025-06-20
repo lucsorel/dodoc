@@ -289,6 +289,8 @@ module.exports = (function () {
         path_to_folder: bin_folder_path,
       });
 
+      const bin_size = await utils.getFolderSize(bin_folder_path);
+
       return {
         size: bin_size,
         files: bin_files,

@@ -312,6 +312,22 @@
               />
             </transition-group>
           </div>
+
+          <button
+            type="button"
+            class="u-buttonLink"
+            v-if="can_edit"
+            @click="show_bin_modal = true"
+          >
+            <b-icon icon="recycle" />
+            {{ $t("bin") }}
+          </button>
+          <BinFolder
+            v-if="show_bin_modal"
+            :modal_title="$t('restore_spaces')"
+            :path="'spaces'"
+            @close="show_bin_modal = false"
+          />
         </div>
       </transition>
 
@@ -400,6 +416,7 @@ import MediaTile from "@/components/MediaTile.vue";
 import MediaModal from "@/components/MediaModal.vue";
 import BatchEditInformationsModal from "@/components/BatchEditInformationsModal.vue";
 import DuplicateMedia from "@/components/DuplicateMedia.vue";
+import BinFolder from "@/adc-core/fields/BinFolder.vue";
 
 export default {
   props: {
@@ -409,6 +426,7 @@ export default {
     hide_already_present_medias: Boolean,
     meta_filenames_already_present: [Boolean, Array],
     show_only_media_of_types: [String, Array],
+    can_edit: Boolean,
   },
   components: {
     ImportFileZone,
@@ -417,6 +435,7 @@ export default {
     BatchEditInformationsModal,
     MediaMap: () => import("@/adc-core/ui/MediaMap.vue"),
     DuplicateMedia,
+    BinFolder,
   },
   data() {
     return {
@@ -433,6 +452,7 @@ export default {
       hide_dropzone_timeout: undefined,
 
       fav_filter: false,
+      show_bin_modal: false,
 
       group_mode: "day",
       // group_mode: localStorage.getItem("library_group_mode") || "day",
